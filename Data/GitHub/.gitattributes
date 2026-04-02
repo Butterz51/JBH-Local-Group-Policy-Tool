@@ -1,0 +1,9 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+*.ps1 text eol=crlf
+*.py  text eol=lf
+*.md  text eol=lf
+*.txt text eol=lf
+*.json text eol=lf
+*.vbs text eol=crlf

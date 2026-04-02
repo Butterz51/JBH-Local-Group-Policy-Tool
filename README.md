@@ -1,86 +1,100 @@
 # JBH Services Local Group Policy Tool
 
-JBH Services Local Group Policy Tool is a PowerShell-based utility for applying a Local Group Policy baseline on Windows systems.
+JBH Services Local Group Policy Tool is a GUI-based Windows utility for applying a Local Group Policy baseline using a Python front end and a PowerShell backend.
 
-It applies required policy settings automatically, and optional policy settings are preconfigured to the current JBH default selections but can be reviewed, changed, previewed, and either included or skipped before changes are written. After the changes are applied, Local Group Policy is refreshed and the user can choose whether to restart immediately or restart later.
+The current version replaces the original console-based workflow with a click-based interface that lets you select policy settings visually, review them before applying, save and load configuration files, and then send the selected settings directly to the backend PowerShell script for processing.
 
-## Project Documents
+## Project documents
 
-- [Changelog](CHANGELOG.md)
-- [Roadmap](ROADMAP.md)
-- [License](LICENSE)
+- [Changelog](./Data/GitHub/CHANGELOG.md)
+- [Roadmap](./Data/GitHub/ROADMAP.md)
 - [Requirements](#requirements)
-- [How to use](#how-to-use)
+- [License](./Data/LICENSE)
+- [Legacy Console Version README](./Data/GitHub/README_v2-0.md)
+
+## Current version
+
+This repository currently includes the newer GUI-based version of the tool.
+
+### GUI version
+- `LocalGroupPolicyTool_GUI.py`
+- `LocalGroupPolicyTool.ps1`
+
+### Legacy console version
+- `Launch-LocalGroupPolicyTool_v2-0.vbs`
+- `LocalGroupPolicyTool_v2-0.ps1`
+
+The legacy console version is still included for compatibility and reference. See the [Legacy Console Version README](./Data/GitHub/README_v2-0.md) for information about the older workflow.
 
 ## Features
 
-- Applies the JBH Services Local Group Policy baseline
-- Includes required policy settings that are always applied
-- Includes optional policy settings that are preconfigured to the current JBH default selections, but can still be reviewed and changed before the tool applies them
-- Provides policy preview and review screens before changes are written
-- Automatically requests Administrator elevation when needed
-- Displays progress while policies are being applied
-- Lets the user choose whether to restart immediately or restart later
+- GUI-based policy selection with checkboxes and dropdowns
+- Review popup before applying settings
+- Save and load configuration files
+- Select All and Deselect All controls
+- Automatic enable/disable handling for related settings
+- PowerShell backend integration for applying selected policies
+- Logging and backend result handling
+- Restart recommendation after policy changes are applied
+
+## How the current GUI version works
+
+1. Open the GUI.
+2. Select the policy settings you want to apply.
+3. Adjust any available dropdown options, such as:
+   - Automatic Updates option
+   - Delivery Optimization mode
+   - Feature Update deferral days
+   - Scheduled install mode, day, and time
+4. Click **Apply**.
+5. Review the selected settings in the confirmation popup.
+6. Click **OK** to continue.
+7. The GUI sends the selected settings directly to the backend PowerShell script.
+8. After the backend finishes, the GUI displays the result and lets you know if a restart is recommended.
+
+## Configuration support
+
+The GUI supports saving and loading configuration files so the same settings can be reused later or applied across multiple systems.
+
+Saved configuration files are stored and loaded from the application's saved config location.
+
+## Backend integration
+
+The GUI does not directly write Local Group Policy changes itself.
+
+Instead, it:
+- collects the selected settings in the GUI
+- prepares the configuration data
+- calls the backend PowerShell script
+- reads the backend result summary
+- displays the final result to the user
+
+This keeps the interface and the policy-writing logic separated.
+
+## Logging
+
+Backend runs create log data so apply results can be reviewed later if needed.
 
 ## Requirements
 
+### For the GUI script version
 - Windows 10/11 Pro
-- PowerShell 5.1
-- Administrator rights
+- Python 3
+- PowerShell 5.1 or later
+- Administrator rights when applying policy changes
 
-## Files
-
-- `LocalGroupPolicyTool.ps1` — main PowerShell script
-- `Launch-LocalGroupPolicyTool.vbs` — launcher for running the tool more easily
-
-## What the tool does
-
-This tool updates the local `Registry.pol` policy files for Computer Configuration and User Configuration, refreshes Local Group Policy, and applies the selected JBH Services baseline settings.
-
-The tool is designed to make Local Group Policy changes easier to manage without manually searching through Group Policy Editor for every setting.
-
-## How to use
-
-1. Download or clone this repository.
-2. Right-click and run the launcher or script.
-3. Approve the Administrator prompt if shown.
-4. Choose one of the available menu options:
-   - use the JBH default policy selections
-   - review or change optional policy selections
-   - preview which policies will be changed
-   - exit without making changes
-5. Apply the selected settings.
-6. Choose whether to restart immediately or restart later.
-
-## Optional policy selections
-
-The tool supports optional policy selections so the baseline can be adjusted before it is applied.
-
-Optional items can be set to:
-
-- **Apply** — include that policy in the current run
-- **Skip** — leave that policy out of the current run
-
-Optional settings follow the current JBH default selections unless the user changes them before applying.
+### For packaged executable use
+- Windows 10/11 Pro
+- PowerShell 5.1 or later
+- Administrator rights when applying policy changes
 
 ## Notes
 
-- Required policy settings are always applied.
-- Optional policy settings follow the current JBH default selections unless the user changes them before applying.
-- Running the tool again re-syncs the managed policy entries instead of stacking duplicates.
-- Some settings may not fully take effect until Windows is restarted.
+- The GUI version is now the primary version of the tool.
+- The legacy console version is still included for users who want the older workflow.
+- Some policy changes may require a restart before they fully take effect.
+- A restart recommendation is shown after the backend completes.
 
-## Contributing
+## Legacy console version
 
-Suggestions, fixes, and improvements are welcome.
-
-If you want to contribute:
-1. Fork the repository
-2. Make your changes
-3. Open a pull request
-
-All changes remain review-only until approved by the repository owner.
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
+The original console version of the tool is still included in this repository.

@@ -1,0 +1,38 @@
+# Windows
+Thumbs.db
+Desktop.ini
+
+# GitHub
+Data/GitHub/
+*ROADMAP.md
+
+# Logs
+Logs/
+*.log
+
+# Saved configs
+Data/Saved Configs/
+*.json
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Build / packaging
+build/
+dist/
+*.spec
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Editor folders
+.vscode/
+.idea/
+
+# Temporary / backup files
+*.tmp
+*.bak
+*.old
