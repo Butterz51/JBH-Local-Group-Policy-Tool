@@ -2,17 +2,16 @@
 Thumbs.db
 Desktop.ini
 
-# GitHub
+# Private GitHub project docs/data
 Data/GitHub/
-*ROADMAP.md
 
 # Logs
 Logs/
 *.log
 
 # Saved configs
-Data/Saved Configs/
-*.json
+Data/Saved Configs/*.json
+Data/Saved Configs/*.ini
 
 # Python cache
 __pycache__/
@@ -36,3 +35,7 @@ env/
 *.tmp
 *.bak
 *.old
+
+# Backup working folders
+Data/Scripts/Python/Backup/
+Work_Folder/

@@ -8,8 +8,8 @@ It applies required policy settings automatically, and optional policy settings 
 
 - [Changelog](./Data/GitHub/CHANGELOG.md)
 - [Roadmap](./Data/GitHub/ROADMAP.md)
-- [License](LICENSE)
 - [Requirements](#requirements)
+- [License](./Data/LICENSE)
 - [How to use](#how-to-use)
 
 ## Features
