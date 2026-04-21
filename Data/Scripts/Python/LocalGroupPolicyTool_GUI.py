@@ -11,16 +11,21 @@ import tkinter as tk
 import webbrowser
 from datetime import datetime
 from tkinter import filedialog, messagebox, ttk
+from window_positioning import center_window, center_child_window
+from policy_help import PolicyHoverDescription
 
 APP_TITLE = "JBH Services Local Group Policy Editor"
 DEFAULT_SAVE_NAME = "Config"
 BACKEND_SCRIPT_RELATIVE_PATH = os.path.join("Data", "Scripts", "PowerShell", "LocalGroupPolicyTool.ps1")
 CONFIGS_RELATIVE_DIR = os.path.join("Data", "Saved Configs")
 LOGS_RELATIVE_DIR = "Logs"
+DONATION_URL = "https://paypal.me/D2ServicesByJBH?country.x=CA&locale.x=en_US"
+DISCORD_URL = "https://discord.gg/ZJpBrkgwA7"
 APP_UPDATE_URL = "https://github.com/Butterz51/JBH-Local-Group-Policy-Tool"
 APP_AUTHOR = "Butterz51 / JBH Services"
-APP_VERSION = "2.5.2"
-APP_BUILD = "0330.26"
+APP_VERSION = "2.5.3"
+APP_BUILD = "0412.26"
+HOVER_DETAILS_DELAY_MS = 3000
 
 THEMES = {
     "dark": {
@@ -325,6 +330,7 @@ class LocalGroupPolicyGUI(tk.Tk):
         self.apply_queue = queue.Queue()
         self.apply_worker = None
         self.cancel_button = None
+        self.policy_info_panel = None
 
         self.active_dropdown = None
         self.dropdown_owner = None
@@ -336,6 +342,7 @@ class LocalGroupPolicyGUI(tk.Tk):
         self._initialize_defaults()
 
         self.update_idletasks()
+        center_window(self)
 
         self.after(150, lambda: self._apply_native_titlebar_theme(debug=True))
 
@@ -787,6 +794,12 @@ class LocalGroupPolicyGUI(tk.Tk):
             self.apply_queue = queue.Queue()
             self.apply_worker = None
             self.cancel_button = None
+            if self.policy_info_panel is not None:
+                try:
+                    self.policy_info_panel.destroy()
+                except Exception:
+                    pass
+            self.policy_info_panel = None
             self.active_dropdown = None
             self.dropdown_owner = None
 
@@ -892,6 +905,7 @@ class LocalGroupPolicyGUI(tk.Tk):
             width=16,
         ).pack(side="right")
 
+        center_child_window(win, self)
         win.after(100, lambda: self._apply_native_titlebar_theme(win, debug=True))
         win.focus_force()
 
@@ -1032,6 +1046,22 @@ class LocalGroupPolicyGUI(tk.Tk):
         )
         self.deselect_all_button.pack(side="left", ipadx=4, ipady=4)
 
+        self.policy_info_panel = PolicyHoverDescription(
+            actions_frame,
+            bg=BG,
+            fg=FG,
+            accent=ACCENT,
+            muted_fg=VCOLOR,
+            delay_ms=HOVER_DETAILS_DELAY_MS,
+            lines=6,
+            min_width=620,
+            min_height=120,
+            reference_widget=self.deselect_all_button,
+            left_gap=18,
+            top_offset=0,
+            right_margin=0,
+        )
+
         columns_frame = tk.Frame(body, bg=BG)
         columns_frame.pack(fill="both", expand=True)
 
@@ -1081,6 +1111,14 @@ class LocalGroupPolicyGUI(tk.Tk):
                 )
                 cb.pack(fill="x", anchor="w")
                 self.controls[item["key"]] = cb
+
+                if self.policy_info_panel is not None:
+                    self.policy_info_panel.bind_control(
+                        cb,
+                        key=item["key"],
+                        label=item["label"],
+                        variable=var,
+                    )
             else:
                 row = tk.Frame(content, bg=BG)
                 row.pack(fill="x", pady=(1, 3), anchor="w")
@@ -1112,6 +1150,12 @@ class LocalGroupPolicyGUI(tk.Tk):
                 )
                 box.pack(side="left", padx=(10, 0))
                 self.controls[item["key"]] = box
+
+                if self.policy_info_panel is not None:
+                    group_id = f"row::{item['key']}"
+                    self.policy_info_panel.bind_control(row, key=item["key"], label=item["label"], variable=var, group=group_id)
+                    self.policy_info_panel.bind_control(label_widget, key=item["key"], label=item["label"], variable=var, group=group_id)
+                    self.policy_info_panel.bind_control(box, key=item["key"], label=item["label"], variable=var, group=group_id)
 
     def _build_footer(self):
         footer = tk.Frame(self, bg=BG)
